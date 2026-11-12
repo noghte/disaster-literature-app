@@ -4,6 +4,21 @@ Companion to **A Computational Map of the Disaster Mental Health Research Landsc
 
 Explore the literature through filters, charts, article records, metadata downloads, and the manuscript. AI synthesis is optional; the explorer works without credentials.
 
+## Citation
+
+Shapouri, S., & Soleymani, S. (2026). *A computational map of the disaster mental health research landscape*. arXiv. [arXiv:2611.10390](https://arxiv.org/abs/2611.10390).
+
+```bibtex
+@misc{shapouri2026disaster,
+  title = {A Computational Map of the Disaster Mental Health Research Landscape},
+  author = {Shapouri, Soheil and Soleymani, Saber},
+  year = {2026},
+  eprint = {2611.10390},
+  archivePrefix = {arXiv},
+  url = {https://arxiv.org/abs/2611.10390}
+}
+```
+
 ## Development
 
 Requires Node.js 22 or newer. No npm dependencies or database are required.
