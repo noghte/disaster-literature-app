@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#254d40">
+  <meta name="description" content="An interactive companion to A Computational Map of the Disaster Mental Health Research Landscape. Search 7,859 articles, explore the evidence, and trace research patterns.">
+  <title>Fieldnotes — Disaster mental health research</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <aside class="sidebar">
+    <a class="brand" href="?view=paper" aria-label="Fieldnotes home"><img src="/favicon.svg" alt="" width="34" height="34"><span>fieldnotes<span class="brand-sub">A research companion</span></span></a>
+    <div class="sidebar-label">DISASTER MENTAL HEALTH</div>
+    <nav aria-label="Main navigation">
+      <button data-view="paper" class="nav-item active"><span class="nav-number">01</span> The paper <span class="nav-arrow">↗</span></button>
+      <button data-view="literature" class="nav-item"><span class="nav-number">02</span> Literature <span class="nav-arrow">↗</span></button>
+      <button data-view="map" class="nav-item"><span class="nav-number">03</span> Evidence map <span class="nav-arrow">↗</span></button>
+      <button data-view="insights" class="nav-item"><span class="nav-number">04</span> Insights <span class="nav-arrow">↗</span></button>
+    </nav>
+    <div class="sidebar-bottom"><span class="source-dot"></span> A snapshot of the field<p>PubMed · retrieved May 2026<br>7,859 records · 5,614 included</p><a href="/paper.pdf" target="_blank" rel="noopener">Read the manuscript <span aria-hidden="true">↗</span></a></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div><span class="muted">Research companion</span><span class="crumb">/</span><span id="breadcrumb">The paper</span></div><span class="topbar-right">Shapouri &amp; Soleymani <span class="version">v1</span></span></header>
+    <main id="main" tabindex="-1"><div class="loading-page"><span class="eyebrow">FIELDNOTES</span><h1>Opening the literature.</h1><p>Loading the article index…</p></div></main>
+    <footer class="footer"><span>A computational map of disaster mental health research</span><span>Publication counts describe research attention.</span></footer>
+  </div>
+  <dialog id="article-dialog" aria-labelledby="article-title"><div id="article-content"></div></dialog>
+  <div id="notice" role="status" aria-live="polite"></div>
+  <noscript><p>This interactive literature explorer requires JavaScript. <a href="/paper.pdf">Read the manuscript PDF.</a></p></noscript>
+</body>
+</html>

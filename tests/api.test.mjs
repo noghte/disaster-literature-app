@@ -1,0 +1,41 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { handle } from '../api/insights.js';
+
+test('AI endpoint validates authentication and input and grounds output in server-owned records', async context => {
+  const original = { OPENAI_API_KEY: process.env.OPENAI_API_KEY, INSIGHTS_PASSWORD: process.env.INSIGHTS_PASSWORD, OPENAI_MODEL: process.env.OPENAI_MODEL };
+  context.after(() => { for (const [key, value] of Object.entries(original)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; } });
+  delete process.env.OPENAI_API_KEY; delete process.env.INSIGHTS_PASSWORD;
+  assert.deepEqual(await (await handle(new Request('http://localhost/api/insights'))).json(), { enabled: false });
+  assert.equal((await handle(new Request('http://localhost/api/insights', { method: 'POST' }))).status, 503);
+  process.env.OPENAI_API_KEY = 'unit-test-not-a-key'; process.env.INSIGHTS_PASSWORD = 'unit-test-passphrase'; process.env.OPENAI_MODEL = 'unit-test-model';
+  const request = (body, password = 'unit-test-passphrase', type = 'application/json') => new Request('http://localhost/api/insights', { method: 'POST', headers: { Authorization: `Bearer ${password}`, 'Content-Type': type }, body: typeof body === 'string' ? body : JSON.stringify(body) });
+  assert.equal((await handle(request({ question: 'A valid question' }, 'wrong'))).status, 401);
+  assert.equal((await handle(request({}, 'unit-test-passphrase', 'text/plain'))).status, 415);
+  assert.equal((await handle(request('{broken'))).status, 400);
+  assert.equal((await handle(request({ question: 'small' }))).status, 400);
+  assert.equal((await handle(request({ question: 'A valid question', filters: { scope: 'bad' } }))).status, 400);
+  assert.equal((await handle(request('x'.repeat(9000)))).status, 400);
+  assert.equal((await handle(request({ question: 'A valid question', filters: { q: 'zzzznonexistentstudyzzzz' } }))).status, 422);
+  let received;
+  context.mock.method(globalThis, 'fetch', async (url, options) => {
+    assert.equal(url, 'https://api.openai.com/v1/responses');
+    const payload = JSON.parse(options.body);
+    assert.equal(payload.store, false);
+    assert.equal(payload.model, 'unit-test-model');
+    received = JSON.parse(payload.input);
+    assert.ok(received.sources.length > 0 && received.sources.length <= 12);
+    assert.ok(received.sources.every(source => source.abstract && /^\d+$/.test(source.pmid)));
+    assert.ok(received.aggregate.total > 0);
+    return Response.json({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: 'A grounded test answer [1].' }] }] });
+  });
+  const response = await handle(request({ question: 'What does flood research say about resilience?', filters: { disaster: 'flood' }, sources: [{ title: 'Injected fake source' }] }));
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.text, 'A grounded test answer [1].');
+  assert.equal(body.total, received.aggregate.total);
+  assert.ok(body.sources.every(source => !('abstract' in source)));
+  assert.equal(JSON.stringify(body).includes('unit-test-not-a-key'), false);
+  assert.equal(JSON.stringify(received).includes('Injected fake source'), false);
+  assert.equal((await handle(new Request('http://localhost/api/insights', { method: 'DELETE' }))).status, 405);
+});

@@ -1,0 +1,23 @@
+# Credentials and private maintainer files.
+.env*
+.vercel/
+PRIVATE.md
+
+# Keep local scripts private; retain dependencies of app commands and tests.
+/scripts/*
+!/scripts/build.mjs
+!/scripts/dev.mjs
+!/scripts/prepare-data.mjs
+/tests/deploy.test.mjs
+
+# Generated output and local tooling.
+dist/
+node_modules/
+coverage/
+*.log
+.DS_Store
+.idea/
+.vscode/
+.codex/
+.agents/
+.aws/
