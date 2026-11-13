@@ -2,6 +2,7 @@
 .env*
 .vercel/
 PRIVATE.md
+AGENTS.md
 
 # Keep local scripts private; retain dependencies of app commands and tests.
 /scripts/*
